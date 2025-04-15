@@ -1,0 +1,7 @@
+{
+  "name": "Jitcall-jesusC",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
