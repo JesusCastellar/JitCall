@@ -1,13 +1,19 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { ContactService } from 'src/app/services/contact.service';
 
 @Component({
   selector: 'app-home',
-  templateUrl: 'home.page.html',
-  styleUrls: ['home.page.scss'],
-  standalone: false,
+  templateUrl: './home.page.html',
+  styleUrls: ['./home.page.scss'],
 })
-export class HomePage {
+export class HomePage implements OnInit {
+  contacts: any[] = [];
 
-  constructor() {}
+  constructor(private contactService: ContactService) {}
 
+  ngOnInit() {
+    this.contactService.getContacts().subscribe(data => {
+      this.contacts = data;
+    });
+  }
 }

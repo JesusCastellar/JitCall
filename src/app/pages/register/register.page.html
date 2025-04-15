@@ -1,0 +1,15 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Registro</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-input label="Nombre" [(ngModel)]="nombre" required></ion-input>
+  <ion-input label="Apellido" [(ngModel)]="apellido" required></ion-input>
+  <ion-input label="Correo" type="email" [(ngModel)]="email" required></ion-input>
+  <ion-input label="Teléfono" type="tel" [(ngModel)]="telefono" required></ion-input>
+  <ion-input label="Contraseña" type="password" [(ngModel)]="password" required></ion-input>
+
+  <ion-button expand="full" (click)="register()">Registrarse</ion-button>
+</ion-content>
