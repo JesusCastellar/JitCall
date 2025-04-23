@@ -4,6 +4,7 @@ import { Component, OnInit } from '@angular/core';
   selector: 'app-video-call',
   templateUrl: './video-call.page.html',
   styleUrls: ['./video-call.page.scss'],
+  standalone : false
 })
 export class VideoCallPage implements OnInit {
 
