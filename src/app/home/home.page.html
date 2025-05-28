@@ -1,6 +1,60 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>Mis Contactos</ion-title>
+    <ion-title>Inicio</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="cerrarSesion()">
+        <ion-icon name="log-out-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
+
+<ion-content class="ion-padding">
+
+  <!-- Perfil del usuario -->
+  <ion-card class="profile-card">
+  <ion-item lines="none" class="ion-align-items-start">
+    <div class="ion-text-center" style="margin-right: 16px;">
+      <ion-avatar>
+        <img [src]="currentUser?.photoUrl || 'assets/default-avatar.png'" />
+      </ion-avatar>
+      <ion-button size="small" fill="clear" (click)="changePhoto()">
+        Cambiar foto
+      </ion-button>
+    </div>
+
+    <ion-label>
+      <h2>
+        {{ currentUser?.firstName || 'Nombre de usuario' }}
+        <ion-button size="small" fill="clear" (click)="changeName()" style="vertical-align: middle;">
+          Cambiar nombre
+        </ion-button>
+      </h2>
+     
+    </ion-label>
+  </ion-item>
+</ion-card>
+
+
+  <!-- Lista de contactos -->
+  <ion-list>
+    <ion-item *ngFor="let contact of contacts" (click)="openChatWith(contact.userId)">
+      <ion-label>
+        <h2>{{ contact.name }}</h2>
+        <p>{{ contact.phone }}</p>
+      </ion-label>
+      <ion-button slot="end" color="primary" (click)="startCall(contact.userId); $event.stopPropagation()">
+        📞
+      </ion-button>
+    </ion-item>
+  </ion-list>
+
+  <!-- Botón flotante -->
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button [routerLink]="['/home/add-contact']">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+
+</ion-content>
 

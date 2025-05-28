@@ -1,62 +1,29 @@
+// add-contact.page.ts
 import { Component } from '@angular/core';
-import { ContactService } from 'src/app/services/contact.service';
-import { AngularFirestore } from '@angular/fire/compat/firestore';
-import { AuthService } from 'src/app/services/auth.service';
-import { ToastController } from '@ionic/angular';
+import { ContactsService } from '../../core/services/contacts.service';
+import { SesionServicio } from '../../core/services/sesion.servicio';
+import { AlertController, NavController } from '@ionic/angular';
 
 @Component({
   selector: 'app-add-contact',
   templateUrl: './add-contact.page.html',
   styleUrls: ['./add-contact.page.scss'],
-  standalone: false
+  standalone: false,
 })
 export class AddContactPage {
-  phoneNumber: string = '';
+  name: string = '';
+  phone: string = '';
 
   constructor(
-    private contactService: ContactService,
-    private authService: AuthService,
-    private firestore: AngularFirestore,
-    private toastController: ToastController
+    private contactsService: ContactsService,
+    private authService: SesionServicio,
+    private navCtrl: NavController,
   ) {}
 
-  addContact() {
-    const normalizedPhone = this.phoneNumber.replace(/\D/g, '');
-
-    this.authService.getCurrentUser().then(user => {
-      if (!user) {
-        this.showToast('❌ Usuario no autenticado');
-        return;
-      }
-
-      this.contactService.contactExistsByPhone(normalizedPhone).subscribe(contactData => {
-        if (contactData) {
-          this.firestore
-            .collection(`users/${user.uid}/contacts`)
-            .doc(normalizedPhone)
-            .set(contactData)
-            .then(() => {
-              this.showToast('✅ Contacto agregado exitosamente');
-              this.phoneNumber = '';
-            });
-        } else {
-          this.showToast('❌ El contacto no existe');
-        }
-      });
-    });
-  }
-
-  async showToast(message: string) {
-    const toast = await this.toastController.create({
-      message,
-      duration: 3000,
-      color: 'primary',
-      position: 'bottom'
-    });
-    toast.present();
-  }
-
-  testConsultaFirestore() {
-    this.contactService.testFirestoreQuery();
+  async onSubmit() {
+    if (this.phone) {
+      await this.contactsService.agregarContacto(this.phone, this.name);
+      this.navCtrl.navigateRoot('/home');
+    }
   }
 }

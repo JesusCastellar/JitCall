@@ -1,17 +1,30 @@
-import { CanActivateFn, Router } from '@angular/router';
-import { inject } from '@angular/core';
-import { AngularFireAuth } from '@angular/fire/compat/auth';
+// auth.guard.ts
+import { Injectable } from '@angular/core';
+import { CanActivate, Router } from '@angular/router';
+import { SesionServicio } from '../core/services/sesion.servicio';
+import { Observable, map } from 'rxjs';
 
-export const authGuard: CanActivateFn = async (route, state) => {
-  const router = inject(Router);
-  const afAuth = inject(AngularFireAuth);
+@Injectable({
+  providedIn: 'root',
+})
+export class AuthGuard implements CanActivate {
+  constructor(
+    private authService: SesionServicio,
+    private router: Router,
+  ) {}
 
-  const user = await afAuth.currentUser;
-
-  if (user) {
-    return true;
-  } else {
-    router.navigate(['/login']);
-    return false;
+  canActivate(): Observable<boolean> {
+    return this.authService.getAuthState().pipe(
+      map((user) => {
+        if (user) {
+          // Si el usuario está autenticado, permitir el acceso
+          return true;
+        } else {
+          // Si no está autenticado, redirigir al acceder
+          this.router.navigate(['/acceder']);
+          return false;
+        }
+      }),
+    );
   }
-};
+}

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { AuthService } from './auth.service';
-import { Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class ContactService {
@@ -30,22 +30,24 @@ export class ContactService {
     });
   }
 
-  contactExistsByPhone(phone: string): Observable<any | null> {
-    return new Observable(observer => {
-      this.firestore
-        .collection('users', ref =>
-          ref.where('telefono', '==', phone).limit(1)
-        )
+  async contactExistsByPhone(phone: string): Promise<any | null> {
+    console.log('📞 Buscando contacto por número:', phone);
+
+    try {
+      const querySnapshot = await this.firestore
+        .collection('users', ref => ref.where('telefono', '==', phone).limit(1))
         .get()
-        .subscribe(snapshot => {
-          if (!snapshot.empty) {
-            observer.next(snapshot.docs[0].data());
-          } else {
-            observer.next(null);
-          }
-          observer.complete();
-        });
-    });
+        .toPromise();
+
+      if (querySnapshot && !querySnapshot.empty) {
+        return querySnapshot.docs[0].data();
+      }
+
+      return null;
+    } catch (error) {
+      console.error('❌ Error al verificar contacto (Firestore):', error);
+      return null;
+    }
   }
 
   testFirestoreQuery() {
