@@ -1,32 +1,56 @@
 import { Injectable } from '@angular/core';
-import { Firestore, collection, collectionData, doc, getDoc } from '@angular/fire/firestore';
+import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { AuthService } from './auth.service';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class ContactService {
-
-  constructor(private firestore: Firestore, private authService: AuthService) {}
+  constructor(
+    private firestore: AngularFirestore,
+    private authService: AuthService
+  ) {}
 
   getContacts(): Observable<any[]> {
-    const user = this.authService.getCurrentUser();
-    if (!user) {
-      // Retornar observable vacío si no hay usuario
-      return new Observable<any[]>(observer => {
-        observer.next([]);
-        observer.complete();
+    return new Observable(observer => {
+      this.authService.getCurrentUser().then(user => {
+        if (!user) {
+          observer.next([]);
+          observer.complete();
+          return;
+        }
+
+        this.firestore
+          .collection(`users/${user.uid}/contacts`)
+          .valueChanges({ idField: 'id' })
+          .subscribe(data => {
+            observer.next(data);
+            observer.complete();
+          });
       });
-    }
-  
-    const contactsRef = collection(this.firestore, `users/${user.uid}/contacts`);
-    return collectionData(contactsRef, { idField: 'id' });
+    });
   }
 
-  async contactExistsByPhone(phone: string): Promise<any | null> {
-    const usersRef = collection(this.firestore, 'users');
-    const snapshot = await getDoc(doc(this.firestore, `users/${phone}`));
-    return snapshot.exists() ? snapshot.data() : null;
+  contactExistsByPhone(phone: string): Observable<any | null> {
+    return new Observable(observer => {
+      this.firestore
+        .collection('users', ref =>
+          ref.where('telefono', '==', phone).limit(1)
+        )
+        .get()
+        .subscribe(snapshot => {
+          if (!snapshot.empty) {
+            observer.next(snapshot.docs[0].data());
+          } else {
+            observer.next(null);
+          }
+          observer.complete();
+        });
+    });
+  }
+
+  testFirestoreQuery() {
+    this.firestore.collection('users').valueChanges().subscribe(data => {
+      console.log('🔥 Datos de usuarios Firestore:', data);
+    });
   }
 }

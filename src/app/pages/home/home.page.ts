@@ -1,18 +1,28 @@
 import { Component, OnInit } from '@angular/core';
+import { ContactService } from 'src/app/services/contact.service';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.page.html',
   styleUrls: ['./home.page.scss'],
-
-  standalone : false
-
+  standalone : false,
 })
 export class HomePage implements OnInit {
 
-  constructor() { }
+  contactos: any[] = [];
+
+  constructor(private contactService: ContactService) {}
 
   ngOnInit() {
+    this.loadContacts();
   }
 
+  loadContacts() {
+    this.contactService.getContacts().subscribe((data) => {
+      this.contactos = data;
+    });
+  }
+  testConsultaFirestore() {
+  this.contactService.testFirestoreQuery();
+}
 }

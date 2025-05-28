@@ -4,16 +4,3 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="ion-padding">
-  <ion-button expand="block" routerLink="/add-contact">Agregar Contacto</ion-button>
-
-  <ion-list *ngIf="contacts.length > 0; else sinContactos">
-    <ion-item *ngFor="let contact of contacts">
-      {{ contact.nombre }} {{ contact.apellido }} - {{ contact.telefono }}
-    </ion-item>
-  </ion-list>
-
-  <ng-template #sinContactos>
-    <p>No tienes contactos aún.</p>
-  </ng-template>
-</ion-content>

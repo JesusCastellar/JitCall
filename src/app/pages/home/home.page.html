@@ -1,13 +1,33 @@
-<ion-header [translucent]="true">
+<ion-header>
   <ion-toolbar>
-    <ion-title>home</ion-title>
+    <ion-title>Mis Contactos</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">home</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content class="ion-padding">
+
+  <ion-button expand="block" color="primary" routerLink="/add-contact">
+    ➕ Agregar Contacto
+  </ion-button>
+  
+  <ion-button expand="block" color="medium" (click)="testConsultaFirestore()">
+  🔍 Test Firestore Query
+  </ion-button>
+  
+
+  <ion-list *ngIf="contactos.length > 0; else sinContactos">
+    <ion-item *ngFor="let contacto of contactos">
+      <ion-label>
+        <h2>{{ contacto.nombre }} {{ contacto.apellido }}</h2>
+        <p>Teléfono: {{ contacto.telefono }}</p>
+      </ion-label>
+    </ion-item>
+  </ion-list>
+
+  <ng-template #sinContactos>
+    <ion-text color="medium">
+      <p>No tienes contactos registrados.</p>
+    </ion-text>
+  </ng-template>
+
 </ion-content>

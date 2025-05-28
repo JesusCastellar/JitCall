@@ -1,39 +1,43 @@
 import { Injectable } from '@angular/core';
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, User } from 'firebase/auth';
-import { doc, setDoc, getDoc } from 'firebase/firestore';
-import { auth, db } from 'src/environments/firebase';
+import { AngularFireAuth } from '@angular/fire/compat/auth';
+import { AngularFirestore } from '@angular/fire/compat/firestore';
+import firebase from 'firebase/compat/app';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  constructor() {}
+  constructor(
+    private afAuth: AngularFireAuth,
+    private firestore: AngularFirestore
+  ) {}
 
   async registerUser(email: string, password: string, nombre: string, apellido: string, telefono: string) {
-    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-    const uid = userCredential.user.uid;
+    const userCredential = await this.afAuth.createUserWithEmailAndPassword(email, password);
+    const uid = userCredential.user?.uid;
 
-    const userDoc = doc(db, 'users', uid);
-    await setDoc(userDoc, {
-      uid,
-      email,
-      nombre,
-      apellido,
-      telefono
-    });
+    if (uid) {
+      await this.firestore.collection('users').doc(uid).set({
+        uid,
+        email,
+        nombre,
+        apellido,
+        telefono
+      });
+    }
 
     return userCredential;
   }
 
   async login(email: string, password: string) {
-    return signInWithEmailAndPassword(auth, email, password);
+    return this.afAuth.signInWithEmailAndPassword(email, password);
   }
 
   async logout() {
-    return signOut(auth);
+    return this.afAuth.signOut();
   }
 
-  getCurrentUser(): User | null {
-    return auth.currentUser;
+  getCurrentUser() {
+    return this.afAuth.currentUser;
   }
 }

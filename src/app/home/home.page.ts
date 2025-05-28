@@ -7,13 +7,18 @@ import { ContactService } from 'src/app/services/contact.service';
   styleUrls: ['./home.page.scss'],
 })
 export class HomePage implements OnInit {
-  contacts: any[] = [];
+
+  contactos: any[] = [];
 
   constructor(private contactService: ContactService) {}
 
   ngOnInit() {
-    this.contactService.getContacts().subscribe(data => {
-      this.contacts = data;
+    this.loadContacts();
+  }
+
+  loadContacts() {
+    this.contactService.getContacts().subscribe((data) => {
+      this.contactos = data;
     });
   }
 }

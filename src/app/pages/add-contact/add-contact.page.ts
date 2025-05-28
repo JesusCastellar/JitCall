@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { ContactService } from 'src/app/services/contact.service';
-import { Firestore, doc, setDoc } from '@angular/fire/firestore';
+import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { AuthService } from 'src/app/services/auth.service';
 import { ToastController } from '@ionic/angular';
 
@@ -8,9 +8,7 @@ import { ToastController } from '@ionic/angular';
   selector: 'app-add-contact',
   templateUrl: './add-contact.page.html',
   styleUrls: ['./add-contact.page.scss'],
-
-  standalone : false
-
+  standalone: false
 })
 export class AddContactPage {
   phoneNumber: string = '';
@@ -18,24 +16,34 @@ export class AddContactPage {
   constructor(
     private contactService: ContactService,
     private authService: AuthService,
-    private firestore: Firestore,
+    private firestore: AngularFirestore,
     private toastController: ToastController
   ) {}
 
-  async addContact() {
-    const user = this.authService.getCurrentUser();
-    if (!user) return;
+  addContact() {
+    const normalizedPhone = this.phoneNumber.replace(/\D/g, '');
 
-    const contactData = await this.contactService.contactExistsByPhone(this.phoneNumber);
-    
-    if (contactData) {
-      const contactRef = doc(this.firestore, `users/${user.uid}/contacts/${this.phoneNumber}`);
-      await setDoc(contactRef, contactData);
-      this.showToast('Contacto agregado exitosamente ✅');
-      this.phoneNumber = '';
-    } else {
-      this.showToast('❌ El contacto no existe');
-    }
+    this.authService.getCurrentUser().then(user => {
+      if (!user) {
+        this.showToast('❌ Usuario no autenticado');
+        return;
+      }
+
+      this.contactService.contactExistsByPhone(normalizedPhone).subscribe(contactData => {
+        if (contactData) {
+          this.firestore
+            .collection(`users/${user.uid}/contacts`)
+            .doc(normalizedPhone)
+            .set(contactData)
+            .then(() => {
+              this.showToast('✅ Contacto agregado exitosamente');
+              this.phoneNumber = '';
+            });
+        } else {
+          this.showToast('❌ El contacto no existe');
+        }
+      });
+    });
   }
 
   async showToast(message: string) {
@@ -46,5 +54,9 @@ export class AddContactPage {
       position: 'bottom'
     });
     toast.present();
+  }
+
+  testConsultaFirestore() {
+    this.contactService.testFirestoreQuery();
   }
 }
