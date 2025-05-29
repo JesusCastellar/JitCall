@@ -7,9 +7,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:143489396645:android:b4fb543d642a4b5065c24c",
+        "mobilesdk_app_id": "1:143489396645:android:0b28ec8d54c487fd65c24c",
         "android_client_info": {
-          "package_name": "com.compani.jitcalljesus"
+          "package_name": "io.ionic.starter"
         }
       },
       "oauth_client": [],

@@ -11,7 +11,7 @@ export class ExternalApiService {
 
   loginToExternalApi(email: string, password: string) {
     return this.http
-      .post<{ data: { access_token: string } }>(`${this.baseUrl}/user/acceder`, {
+      .post<{ data: { access_token: string } }>(`${this.baseUrl}/user/login`, {
         email,
         password,
       })
@@ -21,7 +21,8 @@ export class ExternalApiService {
           console.log('🔐 Token guardado:', res.data.access_token);
         },
         error: (err) => {
-          console.error('❌ Error al loguearse en API externa:', err);
+
+          console.error('❌ Error al loguearse en API externa:', JSON.stringify(err));
         },
       });
   }

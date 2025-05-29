@@ -1,12 +1,29 @@
-ion-content {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-  }
-  
-  form {
-    width: 100%;
-    max-width: 400px;
-    margin: 0 auto;
-  }
-  
+.login-content {
+  --background: var(--ion-background-color);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.login-form {
+  width: 100%;
+  max-width: 400px;
+}
+
+ion-item {
+  --background: var(--ion-item-background);
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+
+ion-button {
+  --border-radius: 8px;
+  --box-shadow: 0px 4px 10px rgba(56, 128, 255, 0.4);
+}
+
+.register-link {
+  color: var(--ion-color-primary);
+  text-decoration: underline;
+  font-weight: 500;
+}

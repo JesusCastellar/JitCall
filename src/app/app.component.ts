@@ -16,8 +16,8 @@ export class AppComponent {
 
   ngOnInit() {
     // ⚠️ Puedes usar valores fijos para pruebas
-    const email = 'luis.torrestomala2@unicolombo.edu.co';
-    const password = '123456789';
+    const email = 'jesus.castellarjulio@unicolombo.edu.co';
+    const password = 'Contraseña123.';
 
     this.externalApiService.loginToExternalApi(email, password);
   }

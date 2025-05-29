@@ -1,13 +1,13 @@
 <ion-header>
-  <ion-toolbar>
+  <ion-toolbar color="primary">
     <ion-title>Iniciar Sesión</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="ion-padding">
-  <form [formGroup]="loginForm" (ngSubmit)="acceder()">
+<ion-content class="ion-padding login-content">
+  <form [formGroup]="loginForm" (ngSubmit)="acceder()" class="login-form">
     
-    <ion-item>
+    <ion-item lines="full">
       <ion-label position="floating">Correo electrónico</ion-label>
       <ion-input type="email" formControlName="email"></ion-input>
     </ion-item>
@@ -15,7 +15,7 @@
       <p class="ion-padding-start">Ingrese un correo válido.</p>
     </ion-text>
 
-    <ion-item>
+    <ion-item lines="full">
       <ion-label position="floating">Contraseña</ion-label>
       <ion-input type="password" formControlName="password"></ion-input>
     </ion-item>
@@ -28,11 +28,12 @@
     </ion-button>
 
     <div class="ion-text-center ion-margin-top">
-      <ion-text>
+      <ion-text color="medium">
         ¿No tienes cuenta?
-        <a routerLink="/crearCuenta">Regístrate aquí</a>
+        <a routerLink="/crearCuenta" class="register-link">Regístrate aquí</a>
       </ion-text>
     </div>
-    
+
   </form>
 </ion-content>
+

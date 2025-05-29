@@ -88,7 +88,7 @@ export class ChatPage implements OnInit {
   }
 
   loadMap(msg: any, container: HTMLElement) {
-    mapboxgl.accessToken = '';
+    mapboxgl.accessToken = 'FKDJGNDFKG';
     const map = new mapboxgl.Map({
       container: container,
       style: 'mapbox://styles/mapbox/streets-v11',
